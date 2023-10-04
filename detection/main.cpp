@@ -20,9 +20,10 @@ int main()
     {
         Mat frame;
         cap >> frame; // 读取视频帧
-        
+
         Mat cameraMatrix = (Mat_<double>(3, 3) << 1000, 0, frame.cols / 2, 0, 1000, frame.rows / 2, 0, 0, 1); // 相机内参矩阵
-        Mat distCoeffs = Mat::zeros(5, 1, CV_64F); // 畸变系数
+        Mat distCoeffs = Mat::zeros(5, 1, CV_64F);// 畸变系数
+        Mat rotationVector, translationVector;//旋转矩阵和平移矩阵
 
         if (frame.empty())
         {
@@ -44,7 +45,7 @@ int main()
         Mat kernel = getStructuringElement(MORPH_RECT, Size(5, 5));
         morphologyEx(yellow_mask, yellow_mask, MORPH_CLOSE, kernel);
 
-        // 找到黄色线条
+        // 使用霍夫变换找到黄色线条（好像失败了）
         // vector<Vec4i> lines;
 
         // HoughLinesP(yellow_mask, lines, 1, CV_PI / 180, 100, 50, 0);
@@ -99,6 +100,7 @@ int main()
                 circle(frame, maxYPoint, 5, Scalar(0, 0, 255), -1);
                 extremepoints.push_back(maxYPoint);
             }
+
             if ((!contours[i].empty()) && (area > 100))
             {
                 Point minYPoint = contours[i][0]; // 初始化最大y坐标的点为第一个点
@@ -129,13 +131,31 @@ int main()
                  }
              }*/
         }
+        // 计算相机坐标系中的三维点
+        std::vector<Point3f> objectPoints;
+        for (int i = 0; i < 4; ++i)
+        {
+            //三维点的 z 坐标被设置为 1000.0，因为我们只能从二维像素坐标中恢复三维点的比例尺度，但无法确定其实际距离。
+            objectPoints.push_back(Point3f((extremepoints[i].x - cameraMatrix.at<double>(0, 2)) 
+                                           / cameraMatrix.at<double>(0, 0),
+                                           (extremepoints[i].y - cameraMatrix.at<double>(1, 2)) 
+                                           / cameraMatrix.at<double>(1, 1),
+                                           1000.0));
+        }
+      
+        solvePnP(objectPoints, extremepoints, cameraMatrix, distCoeffs, rotationVector, translationVector);
 
-        // Mat rvec, tvec; // 旋转向量和平移向量
-        // cv::solvePnP(extremepoints, extremepoints, cameraMatrix, distCoeffs, rvec, tvec);
+        // 计算平面的法向量
+        Mat rotationMatrix;
+        Rodrigues(rotationVector, rotationMatrix);
+        Mat normalVector = rotationMatrix.col(2);
 
-        // // 打印结果
-        // std::cout << "平移向量 (tvec): " << tvec << std::endl;
-        // std::cout << "旋转向量 (rvec): " << rvec << std::endl;
+        // 计算平面到相机的距离
+        int distance = -normalVector.dot(translationVector);
+
+        // 打印结果
+        cout << "平面到相机的距离: " << distance << std::endl;
+        cout << "平面的法向量: " << normalVector << std::endl;
 
         line(frame, extremepoints[0], extremepoints[3], Scalar(0, 0, 255), 1, 8);
         line(frame, extremepoints[1], extremepoints[2], Scalar(0, 0, 255), 1, 8);
@@ -145,15 +165,6 @@ int main()
             averageCenter /= validContours;                         // 计算平均中心点
             circle(frame, averageCenter, 5, Scalar(0, 0, 255), -1); // 在平均中心点处绘制红色圆点
         }
-
-        /*  line(frame, extremepoints[0],extremepoints[3] , Scalar(0, 0, 255), 2); // 绘制红色线条
-            line(frame, extremepoints[1],extremepoints[2] , Scalar(0, 0, 255), 2); // 绘制红色线条
-
-       // 在矩形上标注端点
-         for (size_t i = 0; i < extremepoints.size(); i++)
-         {
-             circle(frame, extremepoints[i], 5, Scalar(0, 255, 0), -1); // 绘制绿色圆点
-         }*/
 
         imshow("Video", frame);
 
