@@ -3,6 +3,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 using namespace cv;
 using namespace std;
@@ -22,8 +23,9 @@ int main()
         cap >> frame; // 读取视频帧
 
         Mat cameraMatrix = (Mat_<double>(3, 3) << 1000, 0, frame.cols / 2, 0, 1000, frame.rows / 2, 0, 0, 1); // 相机内参矩阵
-        Mat distCoeffs = Mat::zeros(5, 1, CV_64F);// 畸变系数
-        Mat rotationVector, translationVector;//旋转矩阵和平移矩阵
+        Mat distCoeffs = Mat::zeros(5, 1, CV_64F);                                                            // 畸变系数
+        Mat rotationVector, translationVector;                                                                // 旋转矩阵和平移矩阵
+        double actual_length = 5.2;                                                                           // 实际距离（单位：cm）
 
         if (frame.empty())
         {
@@ -131,31 +133,40 @@ int main()
                  }
              }*/
         }
+
+        double focalLength = sqrt((cameraMatrix.at<double>(0, 0)) * (cameraMatrix.at<double>(0, 0)) +
+                                  (cameraMatrix.at<double>(1, 1)) * (cameraMatrix.at<double>(1, 1))); // 焦距（单位：像素）
+
+        double pixelDistance1 = norm(extremepoints[0] - extremepoints[1]); // 两个像素点之间的像素距离
+        double pixelDistance2 = norm(extremepoints[2] - extremepoints[3]); // 两个像素点之间的像素距离
+        double depth1 = (actual_length * focalLength) / pixelDistance1;
+        double depth2 = (actual_length * focalLength) / pixelDistance1;
+        double depth = (depth1 + depth2) / 2;
+
         // 计算相机坐标系中的三维点
         std::vector<Point3f> objectPoints;
         for (int i = 0; i < 4; ++i)
         {
-            //三维点的 z 坐标被设置为 1000.0，因为我们只能从二维像素坐标中恢复三维点的比例尺度，但无法确定其实际距离。
-            objectPoints.push_back(Point3f((extremepoints[i].x - cameraMatrix.at<double>(0, 2)) 
-                                           / cameraMatrix.at<double>(0, 0),
-                                           (extremepoints[i].y - cameraMatrix.at<double>(1, 2)) 
-                                           / cameraMatrix.at<double>(1, 1),
-                                           1000.0));
+            // 三维点的 z 坐标被设置为 1000.0，因为我们只能从二维像素坐标中恢复三维点的比例尺度，但无法确定其实际距离。
+            objectPoints.push_back(Point3f((extremepoints[i].x - cameraMatrix.at<double>(0, 2)) / cameraMatrix.at<double>(0, 0),
+                                           (extremepoints[i].y - cameraMatrix.at<double>(1, 2)) / cameraMatrix.at<double>(1, 1),
+                                           depth / 0.04));
         }
-      
+
         solvePnP(objectPoints, extremepoints, cameraMatrix, distCoeffs, rotationVector, translationVector);
 
-        // 计算平面的法向量
-        Mat rotationMatrix;
-        Rodrigues(rotationVector, rotationMatrix);
-        Mat normalVector = rotationMatrix.col(2);
+        // // 计算平面的法向量
+        // Mat rotationMatrix;
+        // Rodrigues(rotationVector, rotationMatrix);
+        // Mat normalVector = rotationMatrix.col(2);
 
         // 计算平面到相机的距离
-        int distance = -normalVector.dot(translationVector);
+        // int distance = -normalVector.dot(translationVector);
 
         // 打印结果
-        cout << "平面到相机的距离: " << distance << std::endl;
-        cout << "平面的法向量: " << normalVector << std::endl;
+        cout << "平面到相机的距离: " << depth << "cm(相关参数为自行设定)" << std::endl;
+        cout << "旋转向量: " << rotationVector << std::endl;
+        cout << "平移向量: " << translationVector << std::endl;
 
         line(frame, extremepoints[0], extremepoints[3], Scalar(0, 0, 255), 1, 8);
         line(frame, extremepoints[1], extremepoints[2], Scalar(0, 0, 255), 1, 8);
