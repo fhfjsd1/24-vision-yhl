@@ -1,0 +1,3 @@
+/home/taylor/testcpp/rectangle/build/CMakeFiles/main.dir
+/home/taylor/testcpp/rectangle/build/CMakeFiles/edit_cache.dir
+/home/taylor/testcpp/rectangle/build/CMakeFiles/rebuild_cache.dir
