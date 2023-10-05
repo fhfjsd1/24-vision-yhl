@@ -17,6 +17,10 @@ The Test Task of The Vision by Yhl
 
 ## [1.0.2] -2023-10-05
 
+### Feature 新增
+
++ 添加了SSH操作任务的总结。
+
 ### Changed 变更
 * 重新配置了`.git`和`.gitignore`文件，使所有变更直接同步到`main`分支，优化了代码上传体验。
 * 修改CMake任务一的相关代码，使其在不修改原有任何文件（仅添加）的情况下完成任务。
