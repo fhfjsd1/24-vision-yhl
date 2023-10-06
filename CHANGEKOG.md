@@ -30,3 +30,4 @@ The Test Task of The Vision by Yhl
 ### Feature 新增
 
 + 添加了`csv`文件，包含激光雷达深度图处理的初步测试代码和相应的测试文件。
++ 新增了在装甲板检测项目中的输出视频上实时显示距离的功能。
