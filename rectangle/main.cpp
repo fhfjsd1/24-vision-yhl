@@ -10,7 +10,7 @@ using namespace std;
 
 int main()
 {
-    VideoCapture cap("/home/taylor/testcpp/rectangle/rec.avi"); // 替换为你的视频文件路径
+    VideoCapture cap("/home/taylor/testcpp/24-vision-yhl-1/rectangle/rec.avi"); // 替换为你的视频文件路径
     if (!cap.isOpened())
     {
         cout << "无法打开视频文件" << endl;
