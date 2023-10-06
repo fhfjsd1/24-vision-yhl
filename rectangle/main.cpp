@@ -17,6 +17,16 @@ int main()
         return -1;
     }
 
+    int codec = cv::VideoWriter::fourcc('X', 'V', 'I', 'D'); // 使用XVID编解码器
+    cv::Size frame_size(static_cast<int>(cap.get(cv::CAP_PROP_FRAME_WIDTH)),
+                        static_cast<int>(cap.get(cv::CAP_PROP_FRAME_HEIGHT)));
+    cv::VideoWriter output("output_video.avi", codec, 30, frame_size); // 输出视频文件名和帧速率
+    if (!output.isOpened())
+    {
+        std::cerr << "无法创建输出视频文件" << std::endl;
+        return -1;
+    }
+
     while (true)
     {
         Mat frame;
@@ -176,6 +186,16 @@ int main()
             averageCenter /= validContours;                         // 计算平均中心点
             circle(frame, averageCenter, 5, Scalar(0, 0, 255), -1); // 在平均中心点处绘制红色圆点
         }
+        std::string text1 = "distance(the relevant parameters are self set):";
+        std::string depth_text = to_string(depth);
+        std::string unit = "cm";
+        std::string distance_text = text1 + depth_text + unit;
+        std::string note = "Attitude information (just temporarily) output at the terminal!";
+
+        cv::putText(frame, distance_text, cv::Point(20, 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 255), 1);
+        cv::putText(frame, note, cv::Point(20, 450), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 255), 1);
+
+        output << frame; // 将帧写入输出视频
 
         imshow("Video", frame);
 
@@ -187,6 +207,7 @@ int main()
     }
 
     cap.release();
+    output.release();
     destroyAllWindows();
 
     return 0;
