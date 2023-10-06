@@ -3,7 +3,6 @@
 *.vscode
 
 # midea files
-*.png
 *.jpg
 *.jpeg
 *.avi
