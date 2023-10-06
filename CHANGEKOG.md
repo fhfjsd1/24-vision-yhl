@@ -13,7 +13,7 @@ The Test Task of The Vision by Yhl
 ### Feature 新增
 
 + 添加了装甲板到相机的距离和姿态的检测代码到相应主函数。
-+ 优化完善了`CMakeLists.txt`中对OpenCv库的链接。
++ 添加了少量语句，优化完善了`CMakeLists.txt`中对OpenCv库的链接。
 
 ## [1.0.2] -2023-10-05
 
@@ -23,4 +23,10 @@ The Test Task of The Vision by Yhl
 
 ### Changed 变更
 * 重新配置了`.git`和`.gitignore`文件，使所有变更直接同步到`main`分支，优化了代码上传体验。
-* 修改CMake任务一的相关代码，使其在不修改原有任何文件（仅添加）的情况下完成任务。
+* 修改CMake任务一的相关代码，使其在不改变原有任何文件（仅添加）的情况下完成任务。
+
+## [1.0.3] -2023-10-06
+
+### Feature 新增
+
++ 添加了`csv`文件，包含激光雷达深度图处理的初步测试代码和相应的测试文件。
