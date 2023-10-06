@@ -1,6 +1,6 @@
 # SSH 操作总结
 
-SSH（Secure Shell）是一种用于安全远程管理和文件传输的协议。它提供了加密的通信通道，允许您连接到远程服务器并执行各种操作。
+SSH（Secure Shell）是一种用于安全远程管理和文件传输的协议。它提供了加密的通信通道，允许连接到远程服务器并执行各种操作。本文档基于模板自行编写。
 
 ## 连接到远程服务器
 
@@ -28,12 +28,6 @@ touch filename.txt
 
 ```bash
 vim filename.txt
-```
-
-- 使用重定向操作符创建文件并添加内容：
-
-```bash
-echo "Hello, World!" > filename.txt
 ```
 
 ## 配置密钥对
