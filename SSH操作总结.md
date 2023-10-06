@@ -24,7 +24,7 @@ ssh username@remote_server_ip
 touch filename.txt
 ```
 
-- 使用文本编辑器创建或编辑文件（例如，使用`nano`或`vim`）：
+- 使用文本编辑器创建或编辑文件（例如，使用nano或vim）：
 
 ```bash
 vim filename.txt
