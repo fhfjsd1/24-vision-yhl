@@ -157,7 +157,6 @@ int main()
         std::vector<Point3f> objectPoints;
         for (int i = 0; i < 4; ++i)
         {
-            // 三维点的 z 坐标被设置为 1000.0，因为我们只能从二维像素坐标中恢复三维点的比例尺度，但无法确定其实际距离。
             objectPoints.push_back(Point3f((extremepoints[i].x - cameraMatrix.at<double>(0, 2)) / cameraMatrix.at<double>(0, 0),
                                            (extremepoints[i].y - cameraMatrix.at<double>(1, 2)) / cameraMatrix.at<double>(1, 1),
                                            depth / 0.04));
