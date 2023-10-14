@@ -10,7 +10,7 @@ using namespace cv;
 int csv(string location,vector<Point3d>& point_cloud)
 {
     string line;
-    // 读取CSV文件、
+    // 读取CSV文件
     std::ifstream file0(location, ios::in);
 
     if (!file0.is_open())
