@@ -1,5 +1,5 @@
 # 24-vision-yhl
-The Test Task of The Vision by Yhl
+The Test Task of The Vision by YHL
 
 ## [1.0.0] -2023-10-01
 
@@ -22,6 +22,7 @@ The Test Task of The Vision by Yhl
 + 添加了SSH操作任务的总结。
 
 ### Changed 变更
+
 * 重新配置了`.git`和`.gitignore`文件，使所有变更直接同步到`main`分支，优化了代码上传体验。
 * 修改CMake任务一的相关代码，使其在不改变原有任何文件（仅添加）的情况下完成任务。
 
@@ -32,3 +33,10 @@ The Test Task of The Vision by Yhl
 + 添加了`csv`文件，包含激光雷达深度图处理的初步测试代码和相应的测试文件。
 + 新增了在装甲板检测项目中的输出视频上实时显示距离的功能。
 + 新增`华南虎视觉组实习生任务报告书`文件，内含部分任务的总结报告。
+
+## [1.1.0] -2023-10-14
+
+### Feature
+
++ 添加了通过Pytorch构建目标分类网络的Python源代码，包括训练，测试和预测。
++ 添加了通过Pytorch框架下实现的YOLOX构建目标检测网络的Python源代码。
