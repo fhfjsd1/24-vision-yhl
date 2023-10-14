@@ -7,12 +7,11 @@
 using namespace std;
 using namespace cv;
 
-int main()
+int csv(string location,vector<Point3d>& point_cloud)
 {
-    std::vector<cv::Point3d> point_cloud;
     string line;
-    // 读取CSV文件
-    std::ifstream file0("/home/taylor/testcpp/csv/cloud_0.csv", ios::in);
+    // 读取CSV文件、
+    std::ifstream file0(location, ios::in);
 
     if (!file0.is_open())
     {
@@ -30,81 +29,35 @@ int main()
     }
 
     file0.close();
-
-    std::ifstream file1("/home/taylor/testcpp/csv/cloud_1.csv", ios::in);
-
-    if (!file1.is_open())
-    {
-        cerr << "无法打开CSV文件" << endl;
-        return -1;
+    return 0;
     }
 
-    while (getline(file1, line))
-    {
-        istringstream ss(line);
-        double x, y, z;
-        char delimiter;
-        ss >> x >> delimiter >> y >> delimiter >> z;
-        point_cloud.push_back(Point3d(x, y, z));
-    }
+int main()
+{
+    std::vector<cv::Point3d> point_cloud;
+   string line;
 
-    file1.close();
-    std::ifstream file2("/home/taylor/testcpp/csv/cloud_2.csv", ios::in);
-
-    if (!file2.is_open())
-    {
-        cerr << "无法打开CSV文件" << endl;
-        return -1;
-    }
-
-    while (getline(file2, line))
-    {
-        istringstream ss(line);
-        double x, y, z;
-        char delimiter;
-        ss >> x >> delimiter >> y >> delimiter >> z;
-        point_cloud.push_back(Point3d(x, y, z));
-    }
-
-    file2.close();
-
-    std::ifstream file3("/home/taylor/testcpp/csv/cloud_3.csv", ios::in);
-
-    if (!file3.is_open())
-    {
-        cerr << "无法打开CSV文件" << endl;
-        return -1;
-    }
-
-    while (getline(file3, line))
-    {
-        istringstream ss(line);
-        double x, y, z;
-        char delimiter;
-        ss >> x >> delimiter >> y >> delimiter >> z;
-        point_cloud.push_back(Point3d(x, y, z));
-    }
-
-    file3.close();
-    std::ifstream file4("/home/taylor/testcpp/csv/cloud_4.csv", ios::in);
-
-    if (!file4.is_open())
-    {
-        cerr << "无法打开CSV文件" << endl;
-        return -1;
-    }
-
-    while (getline(file4, line))
-    {
-        istringstream ss(line);
-        double x, y, z;
-        char delimiter;
-        ss >> x >> delimiter >> y >> delimiter >> z;
-        point_cloud.push_back(Point3d(x, y, z));
-    }
-
-    file4.close();
-
+csv("/home/taylor/testcpp/24-vision-yhl-1/csv/one/cloud_0.csv",point_cloud);
+csv("/home/taylor/testcpp/24-vision-yhl-1/csv/one/cloud_1.csv",point_cloud);
+csv("/home/taylor/testcpp/24-vision-yhl-1/csv/one/cloud_2.csv",point_cloud);
+csv("/home/taylor/testcpp/24-vision-yhl-1/csv/one/cloud_3.csv",point_cloud);
+csv("/home/taylor/testcpp/24-vision-yhl-1/csv/one/cloud_4.csv",point_cloud);
+csv("/home/taylor/testcpp/24-vision-yhl-1/csv/two/cloud_0.csv",point_cloud);
+csv("/home/taylor/testcpp/24-vision-yhl-1/csv/two/cloud_1.csv",point_cloud);
+csv("/home/taylor/testcpp/24-vision-yhl-1/csv/two/cloud_2.csv",point_cloud);
+csv("/home/taylor/testcpp/24-vision-yhl-1/csv/two/cloud_3.csv",point_cloud);
+csv("/home/taylor/testcpp/24-vision-yhl-1/csv/two/cloud_4.csv",point_cloud);
+csv("/home/taylor/testcpp/24-vision-yhl-1/csv/three/cloud_0.csv",point_cloud);
+csv("/home/taylor/testcpp/24-vision-yhl-1/csv/three/cloud_1.csv",point_cloud);
+csv("/home/taylor/testcpp/24-vision-yhl-1/csv/three/cloud_2.csv",point_cloud);
+csv("/home/taylor/testcpp/24-vision-yhl-1/csv/three/cloud_3.csv",point_cloud);
+csv("/home/taylor/testcpp/24-vision-yhl-1/csv/three/cloud_4.csv",point_cloud);
+csv("/home/taylor/testcpp/24-vision-yhl-1/csv/forth/cloud_0.csv",point_cloud);
+csv("/home/taylor/testcpp/24-vision-yhl-1/csv/forth/cloud_1.csv",point_cloud);
+csv("/home/taylor/testcpp/24-vision-yhl-1/csv/forth/cloud_2.csv",point_cloud);
+csv("/home/taylor/testcpp/24-vision-yhl-1/csv/forth/cloud_3.csv",point_cloud);
+csv("/home/taylor/testcpp/24-vision-yhl-1/csv/forth/cloud_4.csv",point_cloud);
+   
     // 定义深度图像的大小
     int width = 1280;
     int height = 1024;
@@ -125,6 +78,7 @@ int main()
                               -7.2148159989590677e-03, -1.8261670813403203e-02,
                               -2.3336137706425064e-03, -9.9994237686382270e-01,
                               1.0478415848689249e-02, 1.7323651488230618e-01, 0., 0., 0., 1.);
+
     Mat rotationMatrix = cameraExtrinsicMat(Range(0, 3), Range(0, 3));
     Mat translationVector = cameraExtrinsicMat.col(3).rowRange(0, 3);
     Mat rotationVector;
@@ -138,7 +92,7 @@ int main()
     {
         cout << "point_cloud" << point_cloud[i] << "  "
              << "point_2d" << point_2d[i] << endl;
-        circle(outputImage, point_2d[i], 2, Scalar(0, 0, 0), -1);
+        circle(outputImage, point_2d[i], 3, Scalar(0, 0, 0), -1);
     }
     cv::imwrite("outputImage.png", outputImage);
 

@@ -1,9 +1,12 @@
 # compile files and directories
 *build
 *.vscode
+*__pycache__
+*data
 
 # midea files
 *.jpg
 *.jpeg
 *.avi
 *.mp4
+*.png
