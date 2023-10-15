@@ -172,10 +172,31 @@ int main()
         // 计算平面到相机的距离
         // int distance = -normalVector.dot(translationVector);
 
+        const double initial_velocity = 20.0; // 初始速度，单位：米/秒
+        const double gravity = 9.81;          // 重力加速度，单位：米/秒^2
+        double distance = depth / 10;
+        double launch_angle = 0;
+        double horizontal_velocity = initial_velocity * cos(launch_angle);
+        double vertical_velocity = initial_velocity * sin(launch_angle);
+        for (; launch_angle <= 1.57;)
+        {
+            double t1 = vertical_velocity * 2 / gravity;
+            double t2 = distance / horizontal_velocity;
+            if (-0.1 <= (t1 - t2) && (t1 - t2) <= 0.1)
+                break;
+            else
+            {
+                launch_angle += 0.01;
+                horizontal_velocity = initial_velocity * cos(launch_angle);
+                vertical_velocity = initial_velocity * sin(launch_angle);
+            }
+        }
+
         // 打印结果
         cout << "平面到相机的距离: " << depth << "cm(相关参数为自行设定)" << std::endl;
         cout << "旋转向量: " << rotationVector << std::endl;
         cout << "平移向量: " << translationVector << std::endl;
+        cout << "发射仰角：" << launch_angle / 3.14159 * 180 << "度" << endl;
 
         line(frame, extremepoints[0], extremepoints[3], Scalar(0, 0, 255), 1, 8);
         line(frame, extremepoints[1], extremepoints[2], Scalar(0, 0, 255), 1, 8);
@@ -185,13 +206,18 @@ int main()
             averageCenter /= validContours;                         // 计算平均中心点
             circle(frame, averageCenter, 5, Scalar(0, 0, 255), -1); // 在平均中心点处绘制红色圆点
         }
+
         std::string text1 = "distance(the relevant parameters are self set):";
         std::string depth_text = to_string(depth);
         std::string unit = "cm";
         std::string distance_text = text1 + depth_text + unit;
         std::string note = "Attitude information (just temporarily) output at the terminal!";
+        std::string angletxt = "launch angle(under angle system):";
+        std::string angle = to_string(launch_angle / 3.14159 * 180);
+        std::string angle_text = angletxt + angle;
 
         cv::putText(frame, distance_text, cv::Point(20, 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 255), 1);
+        cv::putText(frame, angle_text, cv::Point(20, 50), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 255), 1);
         cv::putText(frame, note, cv::Point(20, 450), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 255), 1);
 
         output << frame; // 将帧写入输出视频
