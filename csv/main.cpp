@@ -7,7 +7,7 @@
 using namespace std;
 using namespace cv;
 
-int csv(string location,vector<Point3d>& point_cloud)
+int csv(string location, vector<Point3d> &point_cloud)
 {
     string line;
     // 读取CSV文件
@@ -30,41 +30,41 @@ int csv(string location,vector<Point3d>& point_cloud)
 
     file0.close();
     return 0;
-    }
+}
 
 int main()
 {
     std::vector<cv::Point3d> point_cloud;
-   string line;
+    string line;
 
-csv("/home/taylor/testcpp/24-vision-yhl-1/csv/one/cloud_0.csv",point_cloud);
-csv("/home/taylor/testcpp/24-vision-yhl-1/csv/one/cloud_1.csv",point_cloud);
-csv("/home/taylor/testcpp/24-vision-yhl-1/csv/one/cloud_2.csv",point_cloud);
-csv("/home/taylor/testcpp/24-vision-yhl-1/csv/one/cloud_3.csv",point_cloud);
-csv("/home/taylor/testcpp/24-vision-yhl-1/csv/one/cloud_4.csv",point_cloud);
-csv("/home/taylor/testcpp/24-vision-yhl-1/csv/two/cloud_0.csv",point_cloud);
-csv("/home/taylor/testcpp/24-vision-yhl-1/csv/two/cloud_1.csv",point_cloud);
-csv("/home/taylor/testcpp/24-vision-yhl-1/csv/two/cloud_2.csv",point_cloud);
-csv("/home/taylor/testcpp/24-vision-yhl-1/csv/two/cloud_3.csv",point_cloud);
-csv("/home/taylor/testcpp/24-vision-yhl-1/csv/two/cloud_4.csv",point_cloud);
-csv("/home/taylor/testcpp/24-vision-yhl-1/csv/three/cloud_0.csv",point_cloud);
-csv("/home/taylor/testcpp/24-vision-yhl-1/csv/three/cloud_1.csv",point_cloud);
-csv("/home/taylor/testcpp/24-vision-yhl-1/csv/three/cloud_2.csv",point_cloud);
-csv("/home/taylor/testcpp/24-vision-yhl-1/csv/three/cloud_3.csv",point_cloud);
-csv("/home/taylor/testcpp/24-vision-yhl-1/csv/three/cloud_4.csv",point_cloud);
-csv("/home/taylor/testcpp/24-vision-yhl-1/csv/forth/cloud_0.csv",point_cloud);
-csv("/home/taylor/testcpp/24-vision-yhl-1/csv/forth/cloud_1.csv",point_cloud);
-csv("/home/taylor/testcpp/24-vision-yhl-1/csv/forth/cloud_2.csv",point_cloud);
-csv("/home/taylor/testcpp/24-vision-yhl-1/csv/forth/cloud_3.csv",point_cloud);
-csv("/home/taylor/testcpp/24-vision-yhl-1/csv/forth/cloud_4.csv",point_cloud);
-   
+    csv("/home/taylor/testcpp/csv/one/cloud_0.csv", point_cloud);
+    csv("/home/taylor/testcpp/csv/one/cloud_1.csv", point_cloud);
+    csv("/home/taylor/testcpp/csv/one/cloud_2.csv", point_cloud);
+    csv("/home/taylor/testcpp/csv/one/cloud_3.csv", point_cloud);
+    csv("/home/taylor/testcpp/csv/one/cloud_4.csv", point_cloud);
+    csv("/home/taylor/testcpp/csv/two/cloud_0.csv", point_cloud);
+    csv("/home/taylor/testcpp/csv/two/cloud_1.csv", point_cloud);
+    csv("/home/taylor/testcpp/csv/two/cloud_2.csv", point_cloud);
+    csv("/home/taylor/testcpp/csv/two/cloud_3.csv", point_cloud);
+    csv("/home/taylor/testcpp/csv/two/cloud_4.csv", point_cloud);
+    csv("/home/taylor/testcpp/csv/three/cloud_0.csv", point_cloud);
+    csv("/home/taylor/testcpp/csv/three/cloud_1.csv", point_cloud);
+    csv("/home/taylor/testcpp/csv/three/cloud_2.csv", point_cloud);
+    csv("/home/taylor/testcpp/csv/three/cloud_3.csv", point_cloud);
+    csv("/home/taylor/testcpp/csv/three/cloud_4.csv", point_cloud);
+    csv("/home/taylor/testcpp/csv/forth/cloud_0.csv", point_cloud);
+    csv("/home/taylor/testcpp/csv/forth/cloud_1.csv", point_cloud);
+    csv("/home/taylor/testcpp/csv/forth/cloud_2.csv", point_cloud);
+    csv("/home/taylor/testcpp/csv/forth/cloud_3.csv", point_cloud);
+    csv("/home/taylor/testcpp/csv/forth/cloud_4.csv", point_cloud);
+
     // 定义深度图像的大小
-    int width = 1280;
-    int height = 1024;
+    int width = 2000;
+    int height = 1300;
 
     // 创建深度图像
     // cv::Mat outputImage = cv::Mat::zeros(height, width, CV_32F);
-    Mat outputImage(height, width, CV_8UC3, cv::Scalar(255, 255, 255)); // 用白色背景
+    Mat outputImage(height, width, CV_8UC3, cv::Scalar(255,255,255)); // 用白色背景
 
     // 内部相机参数
     cv::Mat CameraMat = (cv::Mat_<double>(3, 3) << 1.3859739625395162e+03, 0, 9.3622464596653492e+02, 0,
@@ -81,18 +81,21 @@ csv("/home/taylor/testcpp/24-vision-yhl-1/csv/forth/cloud_4.csv",point_cloud);
 
     Mat rotationMatrix = cameraExtrinsicMat(Range(0, 3), Range(0, 3));
     Mat translationVector = cameraExtrinsicMat.col(3).rowRange(0, 3);
+    Mat inversemat;
+    Mat negatevec = (-1.) * translationVector;
+    invert(rotationMatrix, inversemat);
     Mat rotationVector;
-    Rodrigues(rotationMatrix, rotationVector);
+    Rodrigues(inversemat, rotationVector);
 
     // 转换三维点到相机坐标系
     vector<cv::Point2d> point_2d;
-    cv::projectPoints(point_cloud, rotationVector, translationVector, CameraMat, dist_coeffs, point_2d);
+    cv::projectPoints(point_cloud, rotationVector, negatevec, CameraMat, dist_coeffs, point_2d);
 
     for (int i = 0; i < point_2d.size(); i++)
     {
         cout << "point_cloud" << point_cloud[i] << "  "
              << "point_2d" << point_2d[i] << endl;
-        circle(outputImage, point_2d[i], 3, Scalar(0, 0, 0), -1);
+        circle(outputImage, point_2d[i], 3, Scalar(0,0,0), -1);
     }
     cv::imwrite("outputImage.png", outputImage);
 
