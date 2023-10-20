@@ -1,4 +1,4 @@
-# 使用 PyTorch 的 YOLOX 目标检测网络并使用 TensorRT 部署到 C++ 的全流程
+# 使用 YOLOX 目标检测网络并使用 TensorRT 部署到 C++ 的全流程
 
 ## 1. 安装必要的库和工具
 
@@ -7,21 +7,22 @@
 - Python 3.8
 - PyTorch
 - YOLOX
+- CUDA-11.8
 - OpenCV_Python
 - TensorRT
 - CMake
 - g++ 编译器
 - torch2trt
 - numpy
--torch>=1.7
--loguru
--tqdm
--torchvision
--thop
--ninja
--tabulate
--psutil
--tensorboard
+- torch>=1.7
+- loguru
+- tqdm
+- torchvision
+- thop
+- ninja
+- tabulate
+- psutil
+- tensorboard
 
 ## 2. 下载 YOLOX 预训练模型
 
@@ -37,8 +38,7 @@ python3 tools/demo.py image -f exps/default/yolox_s.py -c ./yolox_s.pth --path a
 
 ## 4. 制作数据集
 
-数据集采用VOC数据集，原始数据集是Labelme标注的数据集。下载地址：https://download.csdn.net/download/hhhhhhhhhhwwwwwwwwww/14003627。  
-运行脚本后分类整理得到成品数据集。   
+数据集采用VOC数据集，原始数据集是Labelme标注的数据集。下载地址：https://download.csdn.net/download/hhhhhhhhhhwwwwwwwwww/14003627。运行脚本后分类整理得到成品数据集。   
 ![datasets](https://img-blog.csdnimg.cn/img_convert/a0b98b86b782c773ec067a1ca2e00613.png)
 
 ## 5. 修改配置文件
@@ -58,6 +58,7 @@ python3 tools/train.py -f exps/example/yolox_voc/yolox_voc_s.py -d 1 -b 4 --fp16
 ```shell
 python3 tools/demo.py image -f exps/example/yolox_voc/yolox_voc_s.py -c YOLOX_outputs/yolox_voc_s/latest_ckpt.pth --path ./assets/aircraft_589.jpg --conf 0.3 --nms 0.65 --tsize 640 --save_result --device gpu
 ```
+
 ## 8. 转换模型
 
 使用torch2trt可以很容易地将YOLOX模型转换为RensorRT。
