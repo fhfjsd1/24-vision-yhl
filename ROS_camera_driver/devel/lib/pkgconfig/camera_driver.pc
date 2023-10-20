@@ -1,0 +1,8 @@
+prefix=/home/taylor/camera_ws/devel
+
+Name: camera_driver
+Description: Description of camera_driver
+Version: 0.0.0
+Cflags: -I/home/taylor/camera_ws/devel/include
+Libs: -L${prefix}/lib 
+Requires: 

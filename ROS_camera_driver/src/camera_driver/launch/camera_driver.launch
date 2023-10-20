@@ -1,0 +1,7 @@
+<launch>
+    <node name="camera_driver_node" pkg="camera_driver" type="camera_driver_node.py" output="screen">
+        <param name="camera_params/K" type="string" value="2, 0.0, 2, 0.0, 2, 1, 0.0, 0.0, 1.0"/>
+        <param name="camera_params/P" type="string" value="2, 0.0, 2, 0.0, 0.0, 2, 1, 0.0, 0.0, 0.0, 1.0, 0.0"/>
+    </node>
+</launch>
+
