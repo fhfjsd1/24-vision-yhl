@@ -18,9 +18,9 @@ int main()
     constexpr int64_t numInputElements = numChannels * height * width;
 
 
-    const std::string imageFile = "/home/taylor/testcpp/cpp-onnxruntime-resnet-console-app-main/OnnxRuntimeResNet/assets/1508.png";
-    const std::string labelFile = "/home/taylor/testcpp/cpp-onnxruntime-resnet-console-app-main/OnnxRuntimeResNet/assets/imagenet_classes1.txt";
-    auto modelPath = "/home/taylor/testcpp/cpp-onnxruntime-resnet-console-app-main/OnnxRuntimeResNet/assets/ImageClassifier1.onnx";
+    const std::string imageFile = "/home/taylor/testcpp/24-vision-yhl-1/Pytorch-Classification/cpp-onnxruntime-resnet50/assets/hen.jpeg";
+    const std::string labelFile = "/home/taylor/testcpp/24-vision-yhl-1/Pytorch-Classification/cpp-onnxruntime-resnet50/assets/imagenet_classes.txt";
+    auto modelPath = "/home/taylor/testcpp/24-vision-yhl-1/Pytorch-Classification/cpp-onnxruntime-resnet50/assets/resnet50v2.onnx";
 
     //load labels
     std::vector<std::string> labels = loadLabels(labelFile);

@@ -1,8 +1,8 @@
-prefix=/home/taylor/catkin_ws/devel
+prefix=/home/taylor/testcpp/24-vision-yhl-1/ROS_topic/devel
 
 Name: topic_pkg
 Description: Description of topic_pkg
 Version: 0.0.0
-Cflags: -I/home/taylor/catkin_ws/src/topic_pkg/include
+Cflags: -I/home/taylor/testcpp/24-vision-yhl-1/ROS_topic/src/topic_pkg/include
 Libs: -L${prefix}/lib -ltopic_pkg
 Requires: roscpp rospy std_msgs

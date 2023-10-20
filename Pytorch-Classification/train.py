@@ -19,7 +19,7 @@ torch.manual_seed(seed)
 torch.cuda.manual_seed(seed)
 torch.backends.cudnn.deterministic = True
 torch.backends.cudnn.benchmark = True
-data_path = "/home/taylor/testcpp/24-vision-yhl-1/classification-finished/data" # todo 数据集路径
+data_path = "/home/taylor/testcpp/24-vision-yhl-1/Pytorch-Classification/data" # todo 数据集路径
 
 # 超参数设置
 params = {
@@ -43,7 +43,7 @@ class SELFMODEL(nn.Module):
     def __init__(self, model_name=params['model'], out_features=params['num_classes'],
                  pretrained=True):
         super().__init__()
-        self.model = timm.create_model(model_name, pretrained=pretrained, checkpoint_path="/home/taylor/testcpp/24-vision-yhl-1/classification-finished/pretrained/resnet50d_ra2-464e36ba.pth")  # 从预训练的库中加载模型
+        self.model = timm.create_model(model_name, pretrained=pretrained, checkpoint_path="/home/taylor/testcpp/24-vision-yhl-1/Pytorch-Classification/pretrained/resnet50d_ra2-464e36ba.pth")  # 从预训练的库中加载模型
         if model_name[:3] == "res":
             n_features = self.model.fc.in_features  # 修改全连接层数目
             self.model.fc = nn.Linear(n_features, out_features)  # 修改为本任务对应的类别数目

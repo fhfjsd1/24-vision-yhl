@@ -20,5 +20,4 @@ if __name__ == "__main__":
         rate.sleep()
         # rospy.loginfo("写出的数据:%s",msg.data)  #打印日志信息
         print("msg = ", msg, "msg.data = ", msg.data)
-        print(type(msg), type(msg.data)) 
         count += 1

@@ -13,7 +13,7 @@ if torch.cuda.is_available():
 else:
     device = torch.device('cpu')
 
-model_path = "/home/taylor/testcpp/24-vision-yhl-1/classification-finished/resnet50d_10epochs_accuracy1.00000_weights.pth"  # todo  模型路径
+model_path = "/home/taylor/testcpp/24-vision-yhl-1/Pytorch-Classification/model/resnet50d_10epochs_accuracy1.00000_weights.pth"  # todo  模型路径
 classes_names = ['0', '1', '2', '3', '4','5']  # todo 类名
 img_size = 224  # todo 图片大小
 model_name = "resnet50d"  # todo 模型名称
@@ -78,5 +78,6 @@ if __name__ == '__main__':
     #               save_dir="结果路径")
 
     # 单张图片预测函数
-    predict_single(model_path=model_path, image_path="/home/taylor/testcpp/24-vision-yhl-1/classification-finished/data/train/5/1703.png")# todo
-
+    predict_single(model_path=model_path, image_path="/home/taylor/testcpp/24-vision-yhl-1/Pytorch-Classification/data/validation/2/1502.png")# todo
+    predict_single(model_path=model_path, image_path="/home/taylor/testcpp/24-vision-yhl-1/Pytorch-Classification/data/validation/5/1501.png")# todo
+    predict_single(model_path=model_path, image_path="/home/taylor/testcpp/24-vision-yhl-1/Pytorch-Classification/data/validation/3/1503.png")# todo
