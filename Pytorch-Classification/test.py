@@ -47,9 +47,8 @@ def test(val_loader, model, params, class_names):
             images = images.to(params['device'], non_blocking=True)  # 读取图片
             target = target.to(params['device'], non_blocking=True)  # 读取标签
             output = model(images)  # 前向传播
-            # loss = criterion(output, target.long())  # 计算损失
             # print(output)
-            target_numpy = target.cpu().numpy()
+            target_numpy = target.cpu().numpy() # 样本的真实标签，转换为 Python 中更方便处理标签的 NumPy 数组。
             y_pred = torch.softmax(output, dim=1)
             y_pred = torch.argmax(y_pred, dim=1).cpu().numpy()
             test_real_labels.extend(target_numpy)
@@ -59,7 +58,7 @@ def test(val_loader, model, params, class_names):
             f1_macro = calculate_f1_macro(output, target)  # 计算f1分数
             recall_macro = calculate_recall_macro(output, target)  # 计算recall分数
             acc = accuracy(output, target)  # 计算acc
-            # metric_monitor.update('Loss', loss.item())  # 后面基本都是更新进度条的操作
+            # 后面基本都是更新进度条的操作
             metric_monitor.update('F1', f1_macro)
             metric_monitor.update("Recall", recall_macro)
             metric_monitor.update('Accuracy', acc)
@@ -68,6 +67,8 @@ def test(val_loader, model, params, class_names):
                     epoch="test",
                     metric_monitor=metric_monitor)
             )
+    
+    # Ｐｙｔｈｏｎ绘制热力图　cmap https://blog.csdn.net/ztf312/article/details/102474190
     class_names_length = len(class_names)
     heat_maps = np.zeros((class_names_length, class_names_length))
     for test_real_label, test_pre_label in zip(test_real_labels, test_pre_labels):
@@ -86,7 +87,6 @@ def test(val_loader, model, params, class_names):
     return metric_monitor.metrics['Accuracy']["avg"], metric_monitor.metrics['F1']["avg"], \
            metric_monitor.metrics['Recall']["avg"]
 
-# Ｐｙｔｈｏｎ绘制热力图　cmap https://blog.csdn.net/ztf312/article/details/102474190
 def show_heatmaps(title, x_labels, y_labels, harvest, save_name):
     # 这里是创建一个画布
     fig, ax = plt.subplots()

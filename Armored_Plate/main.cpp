@@ -32,10 +32,11 @@ int main()
         Mat frame;
         cap >> frame; // 读取视频帧
 
-        Mat cameraMatrix = (Mat_<double>(3, 3) << 1000, 0, frame.cols / 2, 0, 1000, frame.rows / 2, 0, 0, 1); // 相机内参矩阵
-        Mat distCoeffs = Mat::zeros(5, 1, CV_64F);                                                            // 畸变系数
-        Mat rotationVector, translationVector;                                                                // 旋转矩阵和平移矩阵
-        double actual_length = 5.2;                                                                           // 实际距离（单位：cm）
+        Mat cameraMatrix = (Mat_<double>(3, 3) << 1000, 0, frame.cols / 2,
+                            0, 1000, frame.rows / 2, 0, 0, 1); // 相机内参矩阵
+        Mat distCoeffs = Mat::zeros(5, 1, CV_64F);             // 畸变系数
+        Mat rotationVector, translationVector;                 // 旋转矩阵和平移矩阵
+        double actual_length = 5.2;                            // 实际距离（单位：cm）
 
         if (frame.empty())
         {
@@ -115,7 +116,7 @@ int main()
 
             if ((!contours[i].empty()) && (area > 100))
             {
-                Point minYPoint = contours[i][0]; // 初始化最大y坐标的点为第一个点
+                Point minYPoint = contours[i][0]; // 初始化最小y坐标的点为第一个点
 
                 for (const Point &p1 : contours[i])
                 {

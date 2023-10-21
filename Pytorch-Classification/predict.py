@@ -1,5 +1,4 @@
 import torch
-# from train_resnet import SelfNet
 from train import SELFMODEL
 import os
 import os.path as osp
@@ -50,25 +49,24 @@ def predict_batch(model_path, target_dir, save_dir):
 
 def predict_single(model_path, image_path):
     data_transforms = get_torch_transforms(img_size=img_size)
-    # train_transforms = data_transforms['train']
     valid_transforms = data_transforms['val']
     # 加载网络
     model = SELFMODEL(model_name=model_name, out_features=num_classes, pretrained=False)
-    # model = nn.DataParallel(model)
     weights = torch.load(model_path)
-    model.load_state_dict(weights)
-    model.eval()
+    model.load_state_dict(weights) # 将 weights 中的参数加载到 model 中
+    model.eval() # 将模型设置为评估模式
     model.to(device)
-
     # 读取图片 
     img = Image.open(image_path)
     img = valid_transforms(img)
-    img = img.unsqueeze(0)
-    img = img.to(device)
+    img = img.unsqueeze(0) # PyTorch 操作，用于在张量的第一个维度（通常是 batch 维度）上添加一个新的维度，
+                           #将其从形状 (H, W, C) 调整为 (1, H, W, C)。这是因为深度学习模型通常要求输入数据以批次的形式，
+                           # 即多个样本一起进行处理。这里将单个图像包装在一个批次中，以满足模型的输入要求。
+    img = img.to(device)  # 将图像张量移动到设备上
     output = model(img)
-    label_id = torch.argmax(output).item()
+    label_id = torch.argmax(output).item() # 在输出张量中找到最高值的索引
     predict_name = classes_names[label_id]
-    print(f"{image_path}'s result is {predict_name}")
+    print(f"{image_path}大概率我觉得应该是{predict_name}")
 
 
 if __name__ == '__main__':

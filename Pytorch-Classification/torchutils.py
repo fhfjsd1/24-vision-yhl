@@ -40,9 +40,6 @@ def get_torch_transforms(img_size=224):
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ]),
         'val': transforms.Compose([
-            # transforms.Resize((img_size, img_size)),
-            # transforms.Resize(256),
-            # transforms.CenterCrop(img_size),
             transforms.Resize((img_size, img_size)),
             transforms.ToTensor(),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
@@ -50,91 +47,48 @@ def get_torch_transforms(img_size=224):
     }
     return data_transforms
 
-
-# 训练集的预处理以及数据增强
-def get_train_transforms(img_size=320):
-    return albumentations.Compose(
-        [
-            albumentations.Resize(img_size, img_size),
-            albumentations.HorizontalFlip(p=0.5),
-            albumentations.VerticalFlip(p=0.5),
-            albumentations.Rotate(limit=180, p=0.7),
-            # albumentations.RandomBrightnessContrast(),
-            albumentations.ShiftScaleRotate(
-                shift_limit=0.25, scale_limit=0.1, rotate_limit=0
-            ),
-            # albumentations.Random
-            albumentations.Normalize(
-                [0.485, 0.456, 0.406], [0.229, 0.224, 0.225],
-                max_pixel_value=255.0, always_apply=True
-            ),
-            ToTensorV2(p=1.0),
-        ]
-    )
-
-
-# 验证集和测试集的预处理
-def get_valid_transforms(img_size=224):
-    return albumentations.Compose(
-        [
-            albumentations.Resize(img_size, img_size),
-            albumentations.Normalize(
-                [0.485, 0.456, 0.406], [0.229, 0.224, 0.225],
-                max_pixel_value=255.0, always_apply=True
-            ),
-            ToTensorV2(p=1.0)
-        ]
-    )
-
-
-# 加载csv格式的数据
-class LeafDataset(Dataset):
-    def __init__(self, images_filepaths, labels, transform=None):
-        self.images_filepaths = images_filepaths  # 数据集路径是个列表
-        self.labels = labels  # 标签也是个列表
-        self.transform = transform  # 数据增强
-
-    def __len__(self):
-        # 返回数据的长度
-        return len(self.images_filepaths)
-
-    def __getitem__(self, idx):
-        # 迭代器
-        image_filepath = self.images_filepaths[idx]
-        # print(image_filepath)
-        image = cv2.imread(image_filepath)  # 读取图片
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # 图片的颜色通道转化
-        label = self.labels[idx]  # 读取图片标签
-        if self.transform is not None:  # 对图片做处理
-            image = self.transform(image=image)["image"] 
-        # 返回处理之后的图片和标签
-        return image, label  
-
-
-# 测试准确率
+# 定义计算准确率的函数
 def accuracy(output, target):
+    # 使用softmax函数计算输出的概率分布，dim=1表示在每行上执行softmax
     y_pred = torch.softmax(output, dim=1)
+
+    # 使用argmax函数找到每行中概率最高的类别索引，同时将结果移到CPU上
     y_pred = torch.argmax(y_pred, dim=1).cpu()
+
+    # 将目标数据移到CPU上
     target = target.cpu()
 
+    # 使用accuracy_score函数计算预测的准确率并返回
     return accuracy_score(target, y_pred)
 
 
-# 计算f1
+# 计算F1分数（宏平均）
 def calculate_f1_macro(output, target):
+    # 使用softmax函数计算输出的概率分布，dim=1表示在每行上执行softmax
     y_pred = torch.softmax(output, dim=1)
+
+    # 使用argmax函数找到每行中概率最高的类别索引，同时将结果移到CPU上
     y_pred = torch.argmax(y_pred, dim=1).cpu()
+
+    # 将目标数据移到CPU上
     target = target.cpu()
 
+    # 使用f1_score函数计算F1分数，采用宏平均（average='macro'）
     return f1_score(target, y_pred, average='macro')
 
-
-# 计算recall
+# 计算召回率（宏平均）
 def calculate_recall_macro(output, target):
+    # 使用softmax函数计算输出的概率分布，dim=1表示在每行上执行softmax
     y_pred = torch.softmax(output, dim=1)
+
+    # 使用argmax函数找到每行中概率最高的类别索引，同时将结果移到CPU上
     y_pred = torch.argmax(y_pred, dim=1).cpu()
+
+    # 将目标数据移到CPU上
     target = target.cpu()
-    # tp fn fp
+
+    # 使用recall_score函数计算召回率，采用宏平均（average="macro"）
+    # zero_division=0 参数用于处理分母为零的情况
     return recall_score(target, y_pred, average="macro", zero_division=0)
 
 

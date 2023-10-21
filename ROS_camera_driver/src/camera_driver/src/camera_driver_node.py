@@ -16,32 +16,31 @@ class CameraDriverNode:
         self.camera_info_pub = rospy.Publisher('camera/camera_info', CameraInfo, queue_size=10)
         self.bridge = CvBridge()
 
-        #self.server = Server(CameraConfig, self.config_callback)
         self.camera_params = rospy.get_param('~camera_params', {})
 
     def config_callback(self, config, level):
-        # Update camera parameters when dynamic reconfigure is called
+        # 动态配置相机参数
         self.camera_params = config
         return config
 
     def capture_and_publish(self):
-        # Capture image from the built-in camera
-        cap = cv2.VideoCapture(0)  # 0 represents the default camera (you may need to adjust this)
+
+        cap = cv2.VideoCapture(0) 
 
         if not cap.isOpened():
-            rospy.logerr("Failed to open the camera.")
+            rospy.logerr("打不开啊啊啊啊啊")
             return
 
-        # Capture a frame from the camera
+        # 从相机截取视频帧
         ret, frame = cap.read()
         if not ret:
-            rospy.logerr("Failed to capture an image from the camera.")
+            rospy.logerr("拍不了啊啊啊啊")
             return
 
-        # Convert the captured frame to ROS format
+        # 转为ROS format
         image_msg = self.bridge.cv2_to_imgmsg(frame, 'bgr8')
 
-        # Populate CameraInfo message with parameters
+        # 装载参数
         camera_info = CameraInfo()
         camera_info.width = frame.shape[1]
         camera_info.height = frame.shape[0]
@@ -53,11 +52,11 @@ class CameraDriverNode:
         camera_info.P = [float(val) for val in P_param_str.split(',')]
 
 
-        # Publish the image and camera info
+        # 发布信息
         self.image_pub.publish(image_msg)
         self.camera_info_pub.publish(camera_info)
 
-        # Release the camera
+        # 释放
         cap.release()
     def run(self):
         rate = rospy.Rate(10)  # 10Hz

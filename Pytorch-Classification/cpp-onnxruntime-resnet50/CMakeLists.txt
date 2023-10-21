@@ -10,7 +10,6 @@ find_path(ONNX_RUNTIME_SESSION_INCLUDE_DIRS onnxruntime_cxx_api.h HINTS /usr/inc
 
 find_library(ONNX_RUNTIME_LIB onnxruntime HINTS /usr/include/onnxruntime-linux-x64-gpu-1.16.1/lib)
 
-
 add_executable(main OnnxRuntimeResNet/OnnxRuntimeResNet.cpp OnnxRuntimeResNet/Helpers.cpp)
 target_include_directories(main PRIVATE ${ONNX_RUNTIME_SESSION_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS})
 target_link_libraries(main PRIVATE ${ONNX_RUNTIME_LIB} ${OpenCV_LIBRARIES})

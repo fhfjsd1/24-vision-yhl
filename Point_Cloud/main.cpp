@@ -59,12 +59,11 @@ int main()
     csv(root_path+"forth/cloud_3.csv", point_cloud);
     csv(root_path+"forth/cloud_4.csv", point_cloud);
 
-    // 定义深度图像的大小
+    // 定义图像的大小
     int width = 2000;
     int height = 1300;
 
     // 创建深度图像
-    // cv::Mat outputImage = cv::Mat::zeros(height, width, CV_32F);
     Mat outputImage(height, width, CV_8UC3, cv::Scalar(255,255,255)); // 用白色背景
 
     // 内部相机参数
